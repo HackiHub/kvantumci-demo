@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kvantumci-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: kvantumci-demo }
+  template:
+    metadata:
+      labels: { app: kvantumci-demo }
+    spec:
+      containers:
+        - name: kvantumci-demo
+          image: ghcr.io/hackihub/kvantumci-demo:latest
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: true
+            runAsUser: 0
+          env:
+            - name: DEMO_API_TOKEN
+              value: DemoOnlyToken2026NeverUse
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kvantumci-demo
+type: Opaque
+stringData:
+  api-key: DemoOnlyToken2026NeverUse
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kvantumci-demo
+spec:
+  type: LoadBalancer
+  selector: { app: kvantumci-demo }
+  ports:
+    - port: 80
+      targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kvantumci-demo
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kvantumci-demo
+                port: { number: 80 }
