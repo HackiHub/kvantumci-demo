@@ -27,11 +27,3 @@ Verified with the local rule engine:
 | 79 | Deterministic npm installation | FAIL | PASS | PASS |
 
 Files to inspect: `.github/workflows/ci.yml`, `Dockerfile`, and `deploy/k8s.yaml`. The hardened Kubernetes image digest is a placeholder; manifests are scan examples, not deployable resources. “Hardened” describes these selected fixes, not a clean scan or production readiness.
-
-To scan locally from the sibling `rule-engine` directory after checking out a branch:
-
-```sh
-.venv/bin/python main.py --source-type github --source-path ../kvantumci-demo --output-format json --max-workers 1
-```
-
-The report is written to `rule-engine/output.json`. Optional metadata check: `npm run check`. No npm dependencies are required. Provider settings and enabled rules can change results in hosted scans.
