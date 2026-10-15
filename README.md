@@ -4,4 +4,4 @@ This repository is an intentionally vulnerable, non-deployable fixture for scan 
 
 Run it with `npm install && npm start`, test it with `npm test`, and scan it with your usual KvantumCI command.
 
-Expected rule IDs: 12, 19, 50, 51, 63, 64, 75, 78, 79. Unrelated controls may also show up. Additional branches will be added for other demo cases.
+The branches are `main`, `demo/ci-fixed`, and `demo/hardened`. `demo/ci-fixed` fixes rules 75, 78, and 79; the Kubernetes and Docker findings remain for the next hardening example. Unrelated controls may also show up.
