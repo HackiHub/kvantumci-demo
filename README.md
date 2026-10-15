@@ -1,9 +1,35 @@
 # kvantumci-demo
 
-This repository is an intentionally vulnerable, non-deployable static fixture for scan demonstrations.
+Static repository fixtures with deliberate security findings for KvantumCI demos. No HTTP server, running application, deployment, or external credentials are needed. Credentials are fictional; Kubernetes images and resources are illustrative.
 
-Run `npm run check` and scan it with your usual KvantumCI command.
+Scan this repository and select a branch in KvantumCI:
 
-The branches are `main`, `demo/ci-fixed`, and `demo/hardened`. `demo/ci-fixed` fixes rules 75, 78, and 79; the Kubernetes and Docker findings remain for the next hardening example. Unrelated controls may also show up.
+| Branch | Scenario |
+| --- | --- |
+| `main` | Vulnerable baseline: inline credentials, privileged/root container, mutable images, missing probes/resources, and weak CI configuration. |
+| `demo/ci-fixed` | Fixes action pinning, PR trigger, and deterministic npm installation; infrastructure findings remain. |
+| `demo/hardened` | Also fixes the selected Kubernetes and credential findings and adds `.dockerignore`. Other controls still fail, including the mutable Docker base image. |
 
-`demo/hardened` fixes the Kubernetes and Docker ignore findings. Rule 19 remains because the Dockerfile base image intentionally retains its mutable tag until a real upstream digest is available. Other absent organization-level controls may also appear in scans. The tcpSocket probes are illustrative configuration only; this fixture does not run a server.
+Verified with the local rule engine:
+
+| Rule | Finding | main | ci-fixed | hardened |
+| --- | --- | --- | --- | --- |
+| 12 | Secret pattern | FAIL | FAIL | PASS |
+| 19 | Docker base image digest | FAIL | FAIL | FAIL |
+| 50 | Kubernetes image digest | FAIL | FAIL | PASS |
+| 51 | Kubernetes security context | FAIL | FAIL | PASS |
+| 63 | Kubernetes secrets/network exposure | FAIL | FAIL | PASS |
+| 64 | Kubernetes resources and probes | FAIL | FAIL | PASS |
+| 75 | GitHub Actions commit pinning | FAIL | PASS | PASS |
+| 78 | `pull_request_target` trigger | FAIL | PASS | PASS |
+| 79 | Deterministic npm installation | FAIL | PASS | PASS |
+
+Files to inspect: `.github/workflows/ci.yml`, `Dockerfile`, and `deploy/k8s.yaml`. The hardened Kubernetes image digest is a placeholder; manifests are scan examples, not deployable resources. “Hardened” describes these selected fixes, not a clean scan or production readiness.
+
+To scan locally from the sibling `rule-engine` directory after checking out a branch:
+
+```sh
+.venv/bin/python main.py --source-type github --source-path ../kvantumci-demo --output-format json --max-workers 1
+```
+
+The report is written to `rule-engine/output.json`. Optional metadata check: `npm run check`. No npm dependencies are required. Provider settings and enabled rules can change results in hosted scans.
