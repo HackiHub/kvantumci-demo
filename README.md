@@ -1,5 +1,7 @@
 # kvantumci-demo
 
+> **Warning: demo purposes only — unsafe for real use.** This repository intentionally contains vulnerabilities and insecure configurations to demonstrate KvantumCI findings. Do not deploy it, use it in production, or copy its configurations into real systems. This applies to every branch, including `demo/hardened`.
+
 Static repository fixtures with deliberate security findings for KvantumCI demos. No HTTP server, running application, deployment, or external credentials are needed. Credentials are fictional; Kubernetes images and resources are illustrative.
 
 Scan this repository and select a branch in KvantumCI:
