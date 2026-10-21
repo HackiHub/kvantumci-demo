@@ -27,3 +27,17 @@ Verified with the local rule engine:
 | 79 | Deterministic npm installation | FAIL | PASS | PASS |
 
 Files to inspect: `.github/workflows/ci.yml`, `Dockerfile`, and `deploy/k8s.yaml`. The hardened Kubernetes image digest is a placeholder; manifests are scan examples, not deployable resources. “Hardened” describes these selected fixes, not a clean scan or production readiness.
+
+## BOM scan fixtures
+
+The root `package.json` and npm v3 lockfile include pinned runtime dependencies so dependency scans work without installing packages on the scanner:
+
+| BOM | Detectable inputs |
+| --- | --- |
+| SBOM | `@anthropic-ai/sdk`, `tweetnacl`, and their locked transitive dependencies. |
+| AIBOM | The Anthropic SDK dependency and import in `src/bom-demo.js`. |
+| CBOM | The `tweetnacl` dependency and Ed25519 signing in `src/bom-demo.js`. |
+| MLBOM | `config/ai-config.json` and `prompts/summary.prompt`. These are demo assets; no trained model is bundled. |
+| CI/CD BOM | The existing `.github/workflows/ci.yml`. |
+
+Run `npm ci` and `npm run check` to verify the offline fixture. It imports the AI SDK, reads the prompt, and signs and verifies it with an ephemeral key pair. No AI API requests, credentials, or model downloads are needed. Rescan the branch containing these files to populate the BOMs; other branches keep their existing fixtures until these changes are applied there too.

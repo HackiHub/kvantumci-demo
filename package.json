@@ -3,5 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "description": "Intentionally vulnerable static scan demo fixture",
-  "scripts": { "check": "node -e \"JSON.parse(require('node:fs').readFileSync('package.json','utf8'))\"" }
+  "scripts": {
+    "check": "node src/bom-demo.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.137.0",
+    "tweetnacl": "1.0.3"
+  }
 }
