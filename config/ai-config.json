@@ -1,0 +1,6 @@
+{
+  "provider": "anthropic",
+  "sdk": "@anthropic-ai/sdk",
+  "mode": "offline-demo",
+  "promptFile": "prompts/summary.prompt"
+}
